@@ -1,0 +1,30 @@
+<package>
+  <name>wheeled_robin_bringup</name>
+  <version>1.0.0</version>
+  <description>
+     wheeled_robin_bringup provides roslaunch scripts for starting the WheeledRobin base functionality. 
+  </description>
+  <maintainer email="joh.mayr@jku.at">Johannes Mayr</maintainer>
+  <license>BSD</license>
+  <url type="website">http://ros.org/wiki/wheeled_robin</url>
+  <url type="repository">https://github.com/robinJKU/wheeled_robin</url>
+  <url type="bugtracker">https://github.com/robinJKU/wheeled_robin/issues</url>
+  <author email="joh.mayr@jku.at">Johannes Mayr</author>
+  <author email="klemens.springer@jku.at">Klemens Springer</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <run_depend>zeroconf_avahi</run_depend>
+  <run_depend>kobuki_node</run_depend>
+  <run_depend>kobuki_bumper2pc</run_depend>
+  <run_depend>kobuki_safety_controller</run_depend>
+  <run_depend>create_node</run_depend>
+  <run_depend>turtlebot_description</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+  <run_depend>robot_pose_ekf</run_depend>
+  <run_depend>diagnostic_aggregator</run_depend>
+  <run_depend>openni_launch</run_depend>
+  <run_depend>linux_hardware</run_depend>
+  <run_depend>rocon_app_manager</run_depend>
+  <run_depend>depthimage_to_laserscan</run_depend>
+</package>

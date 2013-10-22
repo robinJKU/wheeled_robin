@@ -1,20 +1,18 @@
 <package>
-  <name>wheeled_robin_driver</name>
+  <name>wheeled_robin_description</name>
   <version>1.0.0</version>
-  <description>
-    Driver for WheeledRobin
-  </description>
-  <maintainer email="joh.mayr@jku.at">Johannes Mayr</maintainer>
-  <license>MIT</license>
-  <url type="website">http://ros.org/wiki/wheeled_robin_driver</url>
+  <description>The wheeled_robin_description package</description>
+
+  <maintainer email="segway@todo.todo">Johannes Mayr</maintainer>
+  <license>BSD</license>
+  <url type="website">http://ros.org/wiki/wheeled_robin</url>
   <url type="repository">https://github.com/robinJKU/wheeled_robin</url>
   <url type="bugtracker">https://github.com/robinJKU/wheeled_robin/issues</url>
   <author email="joh.mayr@jku.at">Johannes Mayr</author>
   <author email="klemens.springer@jku.at">Klemens Springer</author>
-
+  
   <buildtool_depend>catkin</buildtool_depend>
-
-  <export>
-    <rosdoc config="rosdoc.yaml" />
-  </export>
+  
+  <run_depend>urdf</run_depend>
+  <run_depend>xacro</run_depend>
 </package>

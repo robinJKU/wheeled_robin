@@ -1,0 +1,8 @@
+<?xml version="1.0"?> 
+<robot name="wheeled_robin" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find wheeled_robin_description)/urdf/wheeled_robin_library.urdf.xacro" />
+  
+  <wheeled_robin/>
+  <!--<sensor_kinect  parent="base_link"/>-->
+</robot>

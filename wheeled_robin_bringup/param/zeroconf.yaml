@@ -1,0 +1,9 @@
+
+# Publishes the ros master service on avahi.
+
+services: 
+  - 
+     name: "WheeledRobin"
+     type: _ros-master._tcp 
+     domain: local 
+     description: "ros master"
