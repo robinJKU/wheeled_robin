@@ -12,24 +12,6 @@
 	      <color rgba="0.0 0.8 0.0 1.0"/>
 	  </material>
 	
-	  <!-- base_footprint is a fictitious link(frame) that is on the ground right below base_link origin, navigation stack depends on this frame -->
-	  <link name="base_footprint">
-	    <!--<visual>
-	      <origin xyz="0 0 0" rpy="0 0 0" />
-	      <geometry>
-	        <box size="0.001 0.001 0.001" />
-	      </geometry>
-	      <material name="Green" />
-	    </visual>
-	
-	    <collision>
-	      <origin xyz="0 0 0.017" rpy="0 0 0" />
-	      <geometry>
-	       <box size="0.001 0.001 0.001" />
-	      </geometry>
-	    </collision>-->
-	  </link>
-	
 	  <link name="base_link">
 	    <!--<inertial>
 	      <mass value="2" />
@@ -52,12 +34,6 @@
 	      </geometry>
 	    </collision>-->
 	  </link>
-	
-	  <joint name="base_footprint_joint" type="fixed">
-	    <origin xyz="0 0 0.055" rpy="0 0 0" />        
-	    <parent link="base_footprint"/>
-	    <child link="base_link" />
-	  </joint>
 	
 	  <link name="left_wheel_link">
 	    <!--<inertial>
@@ -101,8 +77,8 @@
 	    <visual>
 	      <origin xyz="0 0 0" rpy="0 1.5707 1.5707" />
 	      <geometry>
-	        <mesh filename="package://wheeled_robin_description/meshes/reifenascii.stl"/>-->
-	        <!--<cylinder radius="0.055" length = "0.05"/>-->
+	        <!--<mesh filename="package://wheeled_robin_description/meshes/reifenascii.stl"/>-->
+	        <cylinder radius="0.055" length = "0.05"/>
 	      </geometry>
 	      <material name="Green" />
 	    </visual>

@@ -17,20 +17,32 @@ def talker():
     #serial = SerialCommandInterface('/dev/ttyUSB0', 38400)
     
     robot.start()
-    #robot.control()
-    #rospy.sleep(1.0)
-    
+    robot.control()
+    rospy.sleep(1.0)
+ 
+    robot.sci.control_params(80,15,100,50,5,30)
+    r = rospy.Rate(100)   
     while not rospy.is_shutdown():
         #rospy.loginfo("Driving with -200 mm/s")
-        #robot.drive(-200, 0)
-        robot.sci.sensors(0)
-        rospy.loginfo("Velocity vL:")
-        a = robot.sci.ser.read(2)
-        (e) = struct.unpack('>h',a)
-        c = e
-        printf('res: %r\n',c)
-        #rospy.loginfo(a)
-        rospy.sleep(0.1)
+        robot.drive(0, 0)
+        #rospy.loginfo(" ")
+        #robot.sci.sensors(1)
+        #a = robot.sci.ser.read(17)
+        #robot.sci.flush_input()
+        #rospy.sleep(0.5)
+        #robot.sci.sensors(22)
+        #b = robot.sci.ser.read(1)
+        # PacketID:0
+        #(e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12,e13,e14,e15,e16) = struct.unpack('>8h1B5h2B',a)
+	#printf('res: %r, %r, %r, %r, %r, %r, %r, %r, %r, %r, %r, %r, %r, %r, %r, %r\n',e1,e2,e3,e4,e5,e6,e7,e8,e9,e10,e11,e12,e13,e14,e15,e16)
+        # PacketID:1
+        #(e1,e2,e3,e4,e5,e6,e7,e8,e9) = struct.unpack('>8h1B',a)
+        #printf('res: %r, %r, %r, %r, %r, %r, %r, %r, %r\n',e1,e2,e3,e4,e5,e6,e7,e8,e9)
+        # PacketID:7-22
+	#(e2) = struct.unpack('>h',a)
+	#printf('res: %r\n', e2)
+	#rospy.loginfo(a)
+        r.sleep()
 
 
 if __name__ == '__main__':

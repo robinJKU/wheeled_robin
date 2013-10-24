@@ -50,6 +50,7 @@ WHEELED_ROBIN_OPCODES = dict(
     stream = 148,
     query_list = 149,
     pause_resume_stream = 150,
+    control_params = 255,
     )
 
 WHEELED_ROBIN_MODES = (
@@ -59,8 +60,8 @@ WHEELED_ROBIN_MODES = (
     'full')
 
 SENSOR_GROUP_PACKET_LENGTHS = {
-    0: 28,
-    1: 18,
+    0: 29,
+    1: 17,
     7: 2,
     8: 2,
     9: 2,

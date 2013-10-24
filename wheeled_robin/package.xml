@@ -1,7 +1,7 @@
 <package>
   <name>wheeled_robin</name>
   <version>1.0.0</version>
-  <description>Catkin metapackage for the wheeled_robin stack</description>
+  <description>The wheeled_robin stack provides all the basic drivers for running and using a WheeledRobin robot.</description>
   <maintainer email="joh.mayr@jku.at">Johannes Mayr</maintainer>
   <license>BSD</license>
   <url type="website">http://ros.org/wiki/wheeled_robin</url>

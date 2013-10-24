@@ -36,6 +36,7 @@ import logging
 import time
 import rospy
 
+
 from math import radians
 from wheeled_robin_driver import SENSOR_GROUP_PACKET_LENGTHS
 
@@ -44,7 +45,7 @@ _struct_Group0 = struct.Struct(">8hB5h2B")
 _struct_Group1 = struct.Struct(">8hB")
 _struct_Group7 = struct.Struct(">h")
 
-def deserialize(msg, buff, timestamp, packed_id):
+def deserialize(msg, buff, timestamp, packet_id):
     """
     unpack serialized message in str into this message instance
     @param buff: byte array of serialized message
@@ -54,13 +55,12 @@ def deserialize(msg, buff, timestamp, packed_id):
         _x = msg
 	
 	msg.header.stamp = rospy.Time.from_seconds(timestamp)        
-	msg.linear_velocity = float(msg.linear_velocity[0]) /1000.
 		
 	# set everything to default values
 	msg.linear_velocity = 0
 	msg.angular_velocity = 0
 	msg.pitch = 0
-	msg.pich_rate = 0
+	msg.pitch_rate = 0
 	msg.left_wheel = 0
 	msg.right_wheel = 0
 	msg.left_wheel_rate = 0
@@ -73,14 +73,14 @@ def deserialize(msg, buff, timestamp, packed_id):
 	msg.imu_acc_y = 0
 
 	
-	if packed_id == 0:
-		(_x.linear_velocity, _x.angular_velocity, _x.pitch, _x.pich_rate, _x.left_wheel, _x.right_wheel, _x.left_wheel_rate, _x.right_wheel_rate, _x.mode, _x.left_current, _x.right_current, _x.voltage, _x.imu_acc_x, _x.imu_acc_y, _x.digital_outputs, _x.digital_inputs,) = _struct_Group0 .unpack(buff[0:SENSOR_GROUP_PACKET_LENGTHS[packet_id]])
+	if packet_id == 0:
+		(_x.linear_velocity, _x.angular_velocity, _x.pitch, _x.pitch_rate, _x.left_wheel, _x.right_wheel, _x.left_wheel_rate, _x.right_wheel_rate, _x.mode, _x.left_current, _x.right_current, _x.voltage, _x.imu_acc_x, _x.imu_acc_y, _x.digital_outputs, _x.digital_inputs,) = _struct_Group0 .unpack(buff[0:SENSOR_GROUP_PACKET_LENGTHS[packet_id]])
 		
 		# do unit conversions
 		msg.linear_velocity = float(msg.linear_velocity) /1000.
 		msg.angular_velocity = float(msg.angular_velocity) /1000.
 		msg.pitch = float(msg.pitch) /1000.
-		msg.pich_rate = float(msg.pich_rate) /1000.
+		msg.pitch_rate = float(msg.pitch_rate) /1000.
 		msg.left_wheel = float(msg.left_wheel) /1000.
 		msg.right_wheel = float(msg.right_wheel) /1000.
 		msg.left_wheel_rate = float(msg.left_wheel_rate) /1000.
@@ -90,7 +90,19 @@ def deserialize(msg, buff, timestamp, packed_id):
 		msg.voltage = float(msg.voltage) /1000.
 		msg.imu_acc_x = float(msg.imu_acc_x) /1000.
 		msg.imu_acc_y = float(msg.linear_velocity) /1000.
-	elif packed_id == 7:
+	elif packet_id == 1:
+		(_x.linear_velocity, _x.angular_velocity, _x.pitch, _x.pitch_rate, _x.left_wheel, _x.right_wheel, _x.left_wheel_rate, _x.right_wheel_rate, _x.mode,) = _struct_Group1 .unpack(buff[0:SENSOR_GROUP_PACKET_LENGTHS[packet_id]])
+		
+		# do unit conversions
+		msg.linear_velocity = float(msg.linear_velocity) /1000.
+		msg.angular_velocity = float(msg.angular_velocity) /1000.
+		msg.pitch = float(msg.pitch) /1000.
+		msg.pitch_rate = float(msg.pitch_rate) /1000.
+		msg.left_wheel = float(msg.left_wheel) /1000.
+		msg.right_wheel = float(msg.right_wheel) /1000.
+		msg.left_wheel_rate = float(msg.left_wheel_rate) /1000.
+		msg.right_wheel_rate = float(msg.right_wheel_rate) /1000.
+	elif packet_id == 7:
 		(_x.linear_velocity) = _struct_Group7 .unpack(buff[0:SENSOR_GROUP_PACKET_LENGTHS[packet_id]])
 		
 		# do unit conversions
@@ -119,6 +131,6 @@ class WheeledRobinSensorHandler(object):
             return self.robot.sci.read(length), stamp
 
     def get_all(self, sensor_state):
-        buff, timestamp = self.request_packet(0)
+        buff, timestamp = self.request_packet(1)
         if buff is not None:
-            deserialize(sensor_state, buff, timestamp,0)
+            deserialize(sensor_state, buff, timestamp,1)

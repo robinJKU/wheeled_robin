@@ -103,7 +103,8 @@ class WheeledRobin_Node(object):
         self.max_abs_yaw_vel = rospy.get_param('~max_abs_yaw_vel', None)
         self.publish_tf = rospy.get_param('~publish_tf', False)
         self.odom_frame = rospy.get_param('~odom_frame', 'odom')
-        self.base_frame = rospy.get_param('~base_frame', 'base_footprint')
+        self.base_footprint_frame = rospy.get_param('~base_footprint_frame', 'base_footprint')
+	self.base_link_frame = rospy.get_param('~base_link_frame', 'base_link')
         self.operate_mode = rospy.get_param('~operation_mode', 3)
 
         rospy.loginfo("serial port: %s"%(self.port))
@@ -180,7 +181,7 @@ class WheeledRobin_Node(object):
 
         # state
         s = self.sensor_state
-        odom = Odometry(header=rospy.Header(frame_id=self.odom_frame), child_frame_id=self.base_frame)
+        odom = Odometry(header=rospy.Header(frame_id=self.odom_frame), child_frame_id=self.base_footprint_frame)
         js = JointState(name = ["left_wheel_joint", "right_wheel_joint"], position=[0,0], velocity=[0,0], effort=[0,0])
 
         r = rospy.Rate(self.update_rate)
@@ -202,7 +203,7 @@ class WheeledRobin_Node(object):
             # SENSE/COMPUTE STATE
             try:
                 self.sense(s)
-                transform = self.compute_odom(s, last_time, odom)
+                transformFootprintBase = self.compute_odom(s, last_time, odom)
                 # Future-date the joint states so that we don't have
                 # to publish as frequently.
                 js.header.stamp = curr_time + rospy.Duration(1)
@@ -220,13 +221,13 @@ class WheeledRobin_Node(object):
                     raise
             sensor_read_retry_count = self._SENSOR_READ_RETRY_COUNT
 
-	    
-
             # PUBLISH STATE
             self.sensor_state_pub.publish(s)
             self.odom_pub.publish(odom)
             if self.publish_tf:
                 self.publish_odometry_transform(odom)
+		self.transform_broadcaster.sendTransform(transformFootprintBase)
+		
             # publish future-dated joint state at 1Hz
             if curr_time > last_js_time + rospy.Duration(1):
                 self.joint_states_pub.publish(js)
@@ -397,7 +398,7 @@ class WheeledRobin_Node(object):
         odom_quat = (0., 0., sin(self._pos2d.theta/2.), cos(self._pos2d.theta/2.))
 
         # construct the transform
-        transform = (self._pos2d.x, self._pos2d.y, 0.), odom_quat
+        # transform = (self._pos2d.x, self._pos2d.y, 0.), odom_quat
 
         # update the odometry state
         odom.header.stamp = current_time
@@ -415,10 +416,11 @@ class WheeledRobin_Node(object):
 	odom.pose.covariance = ODOM_POSE_COVARIANCE
         odom.twist.covariance = ODOM_TWIST_COVARIANCE
 	
-        # construct the transform
-        transform = (self._pos2d.x,self._pos2d.y,0.), odom_quat
+        # construct the transform from footprint to base
+	base_quat = (0., sin(sensor_state.pitch/2.), 0., cos(sensor_state.pitch/2.))
+        transformFootprintBase = (0,0,0.055), base_quat
 
-        return transform
+        return transformFootprintBase
 
     def publish_odometry_transform(self, odometry):
         self.transform_broadcaster.sendTransform(
