@@ -33,11 +33,15 @@
 
 import roslib; roslib.load_manifest('wheeled_robin_node')
 
-import rospy
+import os
 import sys
 import time
 import select
 from math import sin, cos
+
+import rospkg
+import rospy
+import tf
 
 from std_msgs.msg import String
 from geometry_msgs.msg import Point, Pose, Pose2D, PoseWithCovariance, Quaternion, Twist, TwistWithCovariance, Vector3
@@ -60,7 +64,7 @@ from wheeled_robin_node.cfg import WheeledRobinConfig
 class WheeledRobin_Node(object):
     _SENSOR_READ_RETRY_COUNT = 5
 
-    def __init__(self, default_port='/dev/ttyUSB0', default_update_rate=500.0):
+    def __init__(self, default_port='/dev/ttyUSB0', default_update_rate=100.0):
 
         """
         @param default_port: default tty port to use for establishing
@@ -169,8 +173,9 @@ class WheeledRobin_Node(object):
         self.robot.control()
 
         # Startup readings from WheeledRobin can be incorrect, discard first values
-        s = WheeledRobinSensorState()
-        try:
+        #s = WheeledRobinSensorState()
+        s = self.sensor_state
+	try:
             self.sense(s)
         except Exception:
             # packet read can get interrupted, restart loop to
@@ -226,7 +231,7 @@ class WheeledRobin_Node(object):
             self.odom_pub.publish(odom)
             if self.publish_tf:
                 self.publish_odometry_transform(odom)
-		self.transform_broadcaster.sendTransform(transformFootprintBase)
+		self.transform_broadcaster.sendTransform((0,0,0.055), transformFootprintBase, odom.header.stamp, self.base_link_frame, self.base_footprint_frame)
 		
             # publish future-dated joint state at 1Hz
             if curr_time > last_js_time + rospy.Duration(1):
@@ -257,7 +262,7 @@ class WheeledRobin_Node(object):
                 #zero commands on timeout
                 if last_time - last_cmd_vel_time > self.cmd_vel_timeout:
                     last_cmd_vel = 0,0
-		    rospy.loginfo("A Timout in cmd_vel occured")
+		    #rospy.loginfo("A Timout in cmd_vel occured")
 
                 # do some checks on the velocity : TODO  --> check bumpers
                 req_cmd_vel = last_cmd_vel
@@ -275,7 +280,7 @@ class WheeledRobin_Node(object):
         """
         rospy.loginfo("Setting WheeldRobin to passive mode.")
         #setting all the digital outputs to 0
-        self._set_digital_outputs([0, 0, 0, 0, 0, 0, 0, 0])
+        #self._set_digital_outputs([0, 0, 0, 0, 0, 0, 0, 0])
         self.robot.passive()
 
     def _robot_run_safe(self):
@@ -287,7 +292,7 @@ class WheeledRobin_Node(object):
         self.robot.control()
         b1 = (self.sensor_state.digital_inputs & 2)/2
         b2 = (self.sensor_state.digital_inputs & 4)/4
-        self._set_digital_outputs([1, b1, b2, 0, 0, 0, 0, 0])
+        #self._set_digital_outputs([1, b1, b2, 0, 0, 0, 0, 0])
 
     def _robot_run_full(self):
         """
@@ -298,7 +303,7 @@ class WheeledRobin_Node(object):
         self.robot.control()
         b1 = (self.sensor_state.digital_inputs & 2)/2
         b2 = (self.sensor_state.digital_inputs & 4)/4
-        self._set_digital_outputs([1, b1, b2, 0, 0, 0, 0, 0])
+        #self._set_digital_outputs([1, b1, b2, 0, 0, 0, 0, 0])
 
     def _set_digital_outputs(self, outputs):
         assert len(outputs) == 8, 'Expecting 8 output states.'
@@ -336,7 +341,8 @@ class WheeledRobin_Node(object):
         return SetTurtlebotModeResponse(True)
 
     def sense(self, sensor_state):
-        self.sensor_handler.get_all(sensor_state)
+        #sensor_state.mode = 3
+	self.sensor_handler.get_all(sensor_state)
         #if self._gyro:
         #    self._gyro.update_calibration(sensor_state)
 	pass
@@ -378,10 +384,9 @@ class WheeledRobin_Node(object):
         @param odom: Odometry instance to update.
         @type  odom: nav_msgs.msg.Odometry
 
-        @return: transform
-        @rtype: ( (float, float, float), (float, float, float, float) )
+        @return: transformFootprintBase
+        @rtype: (float, float, float, float)
         """
-        # based on otl_roomba by OTL <t.ogura@gmail.com>
 
         current_time = sensor_state.header.stamp
         dt = (current_time - last_time).to_sec()
@@ -418,15 +423,14 @@ class WheeledRobin_Node(object):
 	
         # construct the transform from footprint to base
 	base_quat = (0., sin(sensor_state.pitch/2.), 0., cos(sensor_state.pitch/2.))
-        transformFootprintBase = (0,0,0.055), base_quat
+        transformFootprintBase = base_quat
 
         return transformFootprintBase
 
     def publish_odometry_transform(self, odometry):
         self.transform_broadcaster.sendTransform(
             (odometry.pose.pose.position.x, odometry.pose.pose.position.y, odometry.pose.pose.position.z),
-            (odometry.pose.pose.orientation.x, odometry.pose.pose.orientation.y, odometry.pose.pose.orientation.z,
-             odometry.pose.pose.orientation.w),
+            (odometry.pose.pose.orientation.x, odometry.pose.pose.orientation.y, odometry.pose.pose.orientation.z, odometry.pose.pose.orientation.w),
              odometry.header.stamp, odometry.child_frame_id, odometry.header.frame_id)
 
 def wheeled_robin_main(argv):

@@ -17,14 +17,33 @@ def talker():
     #serial = SerialCommandInterface('/dev/ttyUSB0', 38400)
     
     robot.start()
+    #rospy.sleep(2.5)
+    #robot.sci.start()
     robot.control()
-    rospy.sleep(1.0)
+    rospy.sleep(0.5)
  
-    robot.sci.control_params(80,15,100,50,5,30)
-    r = rospy.Rate(100)   
-    while not rospy.is_shutdown():
+    #robot.sci.control_params(180,18,110,50,50,30)
+    #rospy.sleep(1.0)
+    #robot.control()
+    #robot.drive(130,0)
+    #rospy.sleep(3.0)
+    #robot.drive(0,0)
+    #rospy.sleep(5.0)
+    #robot.drive(-130,0)
+    #rospy.sleep(3.0)
+    #robot.drive(0,0)
+    #rospy.sleep(1.0)
+    #robot.sci.start()
+    #r = rospy.Rate(100)   
+    #while not rospy.is_shutdown():
         #rospy.loginfo("Driving with -200 mm/s")
-        robot.drive(0, 0)
+    #robot.drive(0,1000)
+    #rospy.sleep(1.0)
+    #robot.drive(0,0)
+    #rospy.sleep(1.0)
+    #robot.drive(0,-1000)
+    #rospy.sleep(1.0)
+    #robot.drive(0,0)
         #rospy.loginfo(" ")
         #robot.sci.sensors(1)
         #a = robot.sci.ser.read(17)
@@ -42,7 +61,7 @@ def talker():
 	#(e2) = struct.unpack('>h',a)
 	#printf('res: %r\n', e2)
 	#rospy.loginfo(a)
-        r.sleep()
+        #r.sleep()
 
 
 if __name__ == '__main__':
