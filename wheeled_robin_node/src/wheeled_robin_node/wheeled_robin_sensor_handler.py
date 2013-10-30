@@ -74,7 +74,7 @@ def deserialize(msg, buff, timestamp, packet_id):
 
 	
 	if packet_id == 0:
-		(_x.linear_velocity, _x.angular_velocity, _x.pitch, _x.pitch_rate, _x.left_wheel, _x.right_wheel, _x.left_wheel_rate, _x.right_wheel_rate, _x.mode, _x.left_current, _x.right_current, _x.voltage, _x.imu_acc_x, _x.imu_acc_y, _x.digital_outputs, _x.digital_inputs,) = _struct_Group0 .unpack(buff[0:SENSOR_GROUP_PACKET_LENGTHS[packet_id]])
+		(_x.linear_velocity, _x.angular_velocity, _x.pitch, _x.pitch_rate, _x.left_wheel, _x.right_wheel, _x.left_wheel_rate, _x.right_wheel_rate, _x.mode, _x.left_current, _x.right_current, _x.voltage, _x.imu_acc_x, _x.imu_acc_y, _x.digital_outputs, _x.digital_inputs,) = _struct_Group0.unpack(buff[0:SENSOR_GROUP_PACKET_LENGTHS[packet_id]])
 		
 		# do unit conversions
 		msg.linear_velocity = float(msg.linear_velocity) /1000.
@@ -91,7 +91,7 @@ def deserialize(msg, buff, timestamp, packet_id):
 		msg.imu_acc_x = float(msg.imu_acc_x) /1000.
 		msg.imu_acc_y = float(msg.linear_velocity) /1000.
 	elif packet_id == 1:
-		(_x.linear_velocity, _x.angular_velocity, _x.pitch, _x.pitch_rate, _x.left_wheel, _x.right_wheel, _x.left_wheel_rate, _x.right_wheel_rate, _x.mode,) = _struct_Group1 .unpack(buff[0:SENSOR_GROUP_PACKET_LENGTHS[packet_id]])
+		(_x.linear_velocity, _x.angular_velocity, _x.pitch, _x.pitch_rate, _x.left_wheel, _x.right_wheel, _x.left_wheel_rate, _x.right_wheel_rate, _x.mode,) = _struct_Group1.unpack(buff[0:SENSOR_GROUP_PACKET_LENGTHS[packet_id]])
 		
 		# do unit conversions
 		msg.linear_velocity = float(msg.linear_velocity) /1000.
@@ -102,8 +102,9 @@ def deserialize(msg, buff, timestamp, packet_id):
 		msg.right_wheel = float(msg.right_wheel) /1000.
 		msg.left_wheel_rate = float(msg.left_wheel_rate) /1000.
 		msg.right_wheel_rate = float(msg.right_wheel_rate) /1000.
+
 	elif packet_id == 7:
-		(_x.linear_velocity) = _struct_Group7 .unpack(buff[0:SENSOR_GROUP_PACKET_LENGTHS[packet_id]])
+		(_x.linear_velocity) = _struct_Group .unpack(buff[0:SENSOR_GROUP_PACKET_LENGTHS[packet_id]])
 		
 		# do unit conversions
 		msg.linear_velocity = float(msg.linear_velocity[0]) /1000.

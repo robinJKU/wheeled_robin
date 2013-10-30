@@ -1,7 +1,9 @@
 <launch>
   <!-- WheeledRobin Driver -->
-  <node pkg="wheeled_robin_node" type="wheeled_node.py" name="wheeled_robin_node" respawn="true" args="--respawnable">
-    <param name="update_rate" value="30.0" />
+  <node pkg="wheeled_robin_node" type="set_serial_port" name="set_serial_port" respawn="false"/>
+  <node pkg="wheeled_robin_node" type="wheeled_node.py" name="wheeled_robin_node" output="screen" respawn="true" args="--respawnable">
+    <param name="update_rate" value="50.0" />
+    <param name="publish_tf" value="true" />
     <param name="port" value="/dev/ttyUSB0" />
     <remap from="cmd_vel" to="mobile_base/commands/velocity" />
     <remap from="wheeled_robin_node/sensor_state" to="mobile_base/sensors/core" />
