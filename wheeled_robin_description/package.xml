@@ -3,7 +3,7 @@
   <version>1.0.0</version>
   <description>The wheeled_robin_description package</description>
 
-  <maintainer email="segway@todo.todo">Johannes Mayr</maintainer>
+  <maintainer email="joh.mayr@jku.at">Johannes Mayr</maintainer>
   <license>BSD</license>
   <url type="website">http://ros.org/wiki/wheeled_robin</url>
   <url type="repository">https://github.com/robinJKU/wheeled_robin</url>
