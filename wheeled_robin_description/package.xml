@@ -12,7 +12,9 @@
   <author email="klemens.springer@jku.at">Klemens Springer</author>
   
   <buildtool_depend>catkin</buildtool_depend>
-  
+
+  <build_depend>urdf</run_depend>
+  <build_depend>xacro</run_depend>  
   <run_depend>urdf</run_depend>
   <run_depend>xacro</run_depend>
 </package>
