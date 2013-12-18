@@ -8,8 +8,8 @@
   <property name="base_y" value="0.33" />
 
 	<xacro:macro name="wheeled_robin">
-	  <material name="Green">
-	      <color rgba="0.0 0.8 0.0 1.0"/>
+	  <material name="Grey">
+	      <color rgba="0.7 0.7 0.7 1.0"/>
 	  </material>
 	
 	  <link name="base_link">
@@ -21,10 +21,12 @@
 	    </inertial> -->
 	
 	    <visual>
-	      <origin xyz=" 0 0 0.07" rpy="0 0 0" />
+	      <!-- <origin xyz=" 0 0 0.07" rpy="0 0 0" /> -->
+		<origin xyz=" 0 0 0" rpy="-1.5707 0 0" />
 	      <geometry>
-	        <box size="0.124 0.19 0.2" />
+		<mesh filename="package://wheeled_robin_description/meshes/segway.stl"/>
 	      </geometry>
+		<material name="Grey" />
 	    </visual>
 	
 	    <!--<collision>
@@ -44,11 +46,11 @@
 	    </inertial> -->
 	
 	    <visual>
-	      <origin xyz="0 0 0" rpy="0 1.5707 1.5707" />
+	      <origin xyz="0 0 0" rpy="-1.5707 0 0" />
 	      <geometry>
-	        <cylinder radius="0.055" length = "0.05"/>
+		<mesh filename="package://wheeled_robin_description/meshes/wheel.stl"/>
 	      </geometry>
-	      <material name="Green" />
+		<material name="Grey" />
 	    </visual>
 	
 	    <!--<collision>
@@ -60,8 +62,9 @@
 	  </link>
 	
 	  <joint name="left_wheel_joint" type="continuous">
-	    <origin xyz="0 0.118 0" rpy="0 0 0"/>
-	    <parent link="base_link"/>
+	    <!-- <origin xyz="0 0.118 0" rpy="0 0 0"/> -->
+		<origin xyz="0 0.0925 0" rpy="0 0 0"/>
+	    <parent link="base_link"/>	
 	    <child link="left_wheel_link"/>
 	    <axis xyz="0 1 0"/>
 	  </joint>
@@ -75,12 +78,11 @@
 	    </inertial> -->
 	
 	    <visual>
-	      <origin xyz="0 0 0" rpy="0 1.5707 1.5707" />
+	      <origin xyz="0 0 0" rpy=" 1.5707 0 0" />
 	      <geometry>
-	        <!--<mesh filename="package://wheeled_robin_description/meshes/reifenascii.stl"/>-->
-	        <cylinder radius="0.055" length = "0.05"/>
+		<mesh filename="package://wheeled_robin_description/meshes/wheel.stl"/>
 	      </geometry>
-	      <material name="Green" />
+	      <material name="Grey" />
 	    </visual>
 	
 	    <!--<collision>
@@ -92,7 +94,7 @@
 	  </link>
 	
 	  <joint name="right_wheel_joint" type="continuous">
-	    <origin xyz="0 -0.118 0" rpy="0 0 0"/>
+	    <origin xyz="0 -0.0925 0" rpy="0 0 0"/>
 	    <parent link="base_link"/>
 	    <child link="right_wheel_link"/>
 	    <axis xyz="0 1 0"/>
@@ -113,24 +115,18 @@
 	    <child link="gyro_link"/>
 	  </joint>-->
 
-	  <link name="camera_link">
-	    <!--<visual>
-	      <geometry>
-	        <box size="0 0 0.5" />
-	      </geometry>
-	      <material name="Green" />
-	    </visual>
-	    <inertial>
+	
+	    <!--<inertial>
 	      <mass value="0.001" />
 	      <origin xyz="0 0 0" />
 	      <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
 	        iyy="0.0001" iyz="0.0"
 	        izz="0.0001" />
 	    </inertial>-->
-	  </link>
+
 	  
 	  <joint name="camera_joint" type="fixed">
-	    <origin xyz="0.1 0.0315 0.5" rpy="0 0 0" />
+	    <origin xyz="0.045 0 0.54" rpy="0 0 0" />
 	    <parent link="base_link" />
 	    <child link="camera_link" />
 	  </joint>
@@ -152,15 +148,104 @@
 	  </link>
 	  
 	  <joint name="laser_joint" type="fixed">
-	    <origin xyz="-0.065 0 0.075" rpy="0 0 0" />
-	    <parent link="base_link" />
+	    <origin xyz="0.031 0 0.016" rpy="0 0 0" />
+	    <parent link="camera_link" />
 	    <child link="laser_link" />
 	  </joint>
+
+
+
+<!-- ####### Kinect Frames ######## -->
+
+      <link name="camera_link">
+    <!-- 	<visual>
+     	<origin xyz="0 0 0" rpy="0 0 ${M_PI/2}"/>
+     <geometry>
+       <mesh filename="package://turtlebot_description/meshes/sensors/kinect.dae"/>
+      </geometry> 
+    </visual>
+	  <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+	    <geometry>
+	      <box size="0.07271 0.27794 0.073"/>
+	    </geometry>
+	  </collision> -->
+    <inertial> 
+      <mass value="0.001" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+               iyy="0.0001" iyz="0.0"
+               izz="0.0001" />
+    </inertial>
+  </link>
+
+
+
+    <joint name="camera_rgb_joint" type="fixed">
+      <origin xyz="0.031 -0.0125 0.016" rpy="0 0 0"/>
+      <parent link="camera_link"/>
+      <child link="camera_rgb_frame" />
+    </joint>
+    <link name="camera_rgb_frame">
+      <inertial>
+        <mass value="0.001" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+                 iyy="0.0001" iyz="0.0"
+                 izz="0.0001" />
+      </inertial>
+    </link>
+    <joint name="camera_rgb_optical_joint" type="fixed">
+      <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}" />
+      <parent link="camera_rgb_frame" />
+      <child link="camera_rgb_optical_frame" />
+    </joint>
+    <link name="camera_rgb_optical_frame">
+      <inertial>
+        <mass value="0.001" />
+        <origin xyz="0 0 0" />
+        <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+                 iyy="0.0001" iyz="0.0"
+                 izz="0.0001" />
+      </inertial>
+    </link>
+
+
+   
 	  
-	  <!-- Simulation sensors -->
-	  <!--<sim_wheeled_robin/>
-	  <sim_wheeled_robin_wall_sensor/>
-	  <sim_wheeled_robin_cliff_sensors/>
-	  <sim_imu/>-->
+  <!-- The fixed joints & links below are usually published by static_transformers launched by the OpenNi launch 
+       files. However, for Gazebo simulation we need them, so we add them here.
+       (Hence, don't publish them additionally!) -->
+	<joint name="camera_depth_joint" type="fixed">
+	  <origin xyz="0 0.025 0" rpy="0 0 0" />
+	  <parent link="camera_rgb_frame" />
+	  <child link="camera_depth_frame" />
+	</joint>
+	<link name="camera_depth_frame">
+    <inertial>
+      <mass value="0.001" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+               iyy="0.0001" iyz="0.0"
+               izz="0.0001" />
+    </inertial>
+	</link>
+	<joint name="camera_depth_optical_joint" type="fixed">
+	  <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}" />
+	  <parent link="camera_depth_frame" />
+	  <child link="camera_depth_optical_frame" />
+	</joint>
+	<link name="camera_depth_optical_frame">
+    <inertial>
+      <mass value="0.001" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+               iyy="0.0001" iyz="0.0"
+               izz="0.0001" />
+    </inertial>
+	</link>
+    
+
+
 	</xacro:macro>
 </robot>
