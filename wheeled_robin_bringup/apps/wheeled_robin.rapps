@@ -6,6 +6,7 @@ apps:
 # - turtlebot_core_apps/android_map_nav
 # - turtlebot_core_apps/android_map_manager
  - wheeled_robin_core_apps/thrustmaster_teleop
+ - wheeled_robin_core_apps/android_video_streamer
 # - turtlebot_core_apps/xbox360_teleop
 # - turtlebot_core_apps/follower
 # - turtlebot_core_apps/panorama
